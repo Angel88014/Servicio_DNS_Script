@@ -7,7 +7,7 @@ mostrar_info() {
     echo "       ESTADO DEL SISTEMA DNS"
     echo "==========================================="
     echo -n "IP Local: "
-    hostname -I | awk '{print $1}'
+    ip addr show $(ip route | awk '/default/ { print $5 }') | grep "inet " | awk '{print $2}' | cut -d'/' -f1
     echo -n "Estado Bind9 (Nativo): "
     systemctl is-active --quiet named && echo "ACTIVO" || echo "INACTIVO"
     echo -n "Estado Docker (Contenedor): "
@@ -24,12 +24,20 @@ instalar_nativo() {
 }
 
 instalar_docker() {
-    echo "Construyendo imagen y levantando contenedor..."
-    cd ../docker
+    echo "Limpiando y levantando contenedor..."
+    BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
+    
+    # Esto borra el contenedor si ya existe para evitar el error de "Conflict"
+    docker rm -f dns-server >/dev/null 2>&1
+    
+    cd "$BASE_DIR/docker" || exit
     docker build -t dns-ubuntu-image .
     docker run -d --name dns-server -p 53:53/udp -p 53:53/tcp dns-ubuntu-image
-    cd ../scripts
+    cd "$BASE_DIR/scripts" || exit
+    echo "¡Servidor DNS en Docker listo!"
+    sleep 2
 }
+
 
 # --- MENÚ INTERACTIVO ---
 mostrar_info
