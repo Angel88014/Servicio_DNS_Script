@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# --- INFO DE RED Y ESTADO ---
 mostrar_info() {
     clear
     echo "==========================================="
@@ -15,7 +14,6 @@ mostrar_info() {
     echo "==========================================="
 }
 
-# --- ACCIONES ---
 instalar_nativo() {
     echo "Instalando BIND en Arch Linux..."
     sudo pacman -S --noconfirm bind dnsutils
@@ -27,7 +25,6 @@ instalar_docker() {
     echo "Limpiando y levantando contenedor..."
     BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
     
-    # Esto borra el contenedor si ya existe para evitar el error de "Conflict"
     docker rm -f dns-server >/dev/null 2>&1
     
     cd "$BASE_DIR/docker" || exit
@@ -38,7 +35,6 @@ instalar_docker() {
     sleep 2
 }
 
-# --- LÓGICA DE PARÁMETROS ---
 if [ ! -z "$1" ]; then
     case $1 in
         --install-docker)
@@ -67,9 +63,6 @@ if [ ! -z "$1" ]; then
     esac
 fi
 
-# El resto del script (menú interactivo) sigue aquí abajo...
-
-# --- MENÚ INTERACTIVO ---
 mostrar_info
 echo "1) Instalar servicio (Nativo - pacman)"
 echo "2) Instalar servicio (Docker)"
@@ -89,3 +82,4 @@ case $opcion in
     6) journalctl -u named -n 20 ;;
     7) exit 0 ;;
 esac
+
