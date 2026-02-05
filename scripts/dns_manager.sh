@@ -38,6 +38,36 @@ instalar_docker() {
     sleep 2
 }
 
+# --- LÓGICA DE PARÁMETROS ---
+if [ ! -z "$1" ]; then
+    case $1 in
+        --install-docker)
+            instalar_docker
+            exit 0
+            ;;
+        --start)
+            docker start dns-server
+            echo "Servidor DNS iniciado."
+            exit 0
+            ;;
+        --stop)
+            docker stop dns-server
+            echo "Servidor DNS detenido."
+            exit 0
+            ;;
+        --help)
+            echo "Uso: $0 {--install-docker|--start|--stop|--help}"
+            exit 0
+            ;;
+        *)
+            echo "Opción no válida: $1"
+            echo "Usa --help para ver las opciones."
+            exit 1
+            ;;
+    esac
+fi
+
+# El resto del script (menú interactivo) sigue aquí abajo...
 
 # --- MENÚ INTERACTIVO ---
 mostrar_info
