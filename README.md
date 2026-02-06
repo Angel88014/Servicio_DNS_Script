@@ -24,3 +24,10 @@ El proyecto se ha organizado en módulos para facilitar su escalabilidad:
 ```bash
 git clone [https://github.com/Angel88014/Servicio_DNS_Script.git](https://github.com/Angel88014/Servicio_DNS_Script.git)
 cd Servicio_DNS_Script
+
+🔍 Verificación del Sistema
+Una vez que el estado aparezca como ACTIVO en el script, puedes verificar la resolución DNS real ejecutando una consulta contra tu propio contenedor:
+
+```bash
+dig @127.0.0.1 google.com
+Si recibes una respuesta en la "Answer Section", el servidor está operando correctamente.
